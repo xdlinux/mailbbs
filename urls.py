@@ -7,7 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'mailbbs.views.home', name='home'),
-     url(r'^mail/', include('mailbbs.mail.urls')),
+     url(r'^mail/', include('mailbbs.mails.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

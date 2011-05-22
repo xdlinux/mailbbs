@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mailbbs.mail.models import *
+from mailbbs.mails.models import *
 
 
 admin.site.register(Mail)
