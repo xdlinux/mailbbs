@@ -1,0 +1,27 @@
+{% if mails %}
+<ol>
+	{% for mail in mails %}
+	<li>
+	<dl>
+		<dt><a href="{{ mail.id }}" >{{ mail }}</a></dt>
+		<dd>From {{ mail.From }}.
+		{% if mail.ChildMails.latest %}
+		({{ mail.ChildMails.count }} repl{{ mail.ChildMails|pluralize:'y,ies' }})
+		</dd>
+		<dd>
+		<label for="">
+			Latest Reply: 
+		</label>
+		" {{ mail.ChildMails.latest }} " (From:{{ mail.ChildMails.latest.From }})
+		</dd>
+		<dd>{{ mail.ChildMails.latest.Datetime }}</dd>
+		{% else %}
+		<dd>{{ mail.Datetime }}</dd>
+		{% endif %}
+	</dl>
+	</li>
+	{% endfor %}
+</ol>
+{% else %}
+<p>No mails here now!</p>
+{% endif %}

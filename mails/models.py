@@ -27,6 +27,8 @@ class Mail(models.Model):
 	InReplyToRoot = models.ForeignKey('self', related_name='ChildMails',null=True,blank=True)
 	RawData = models.TextField()
 	Datetime = models.DateTimeField()
+	class Meta:
+		get_latest_by='Datetime'
 	def __unicode__(self):
 		return self.Subject
 	def save(self, force_insert=False, force_update=False):
@@ -58,5 +60,3 @@ class Mail(models.Model):
 					cmail=cmail.InReplyTo
 				self.InReplyToRoot=cmail
 		models.Model.save(self,force_insert,force_update)
-	
-

@@ -1,0 +1,21 @@
+<h2>{{ mail }}</h2>
+<p>From {{ mail.From }} to {{ mail.To }}</p>
+<p>{{ mail.Datetime }}</p>
+<p>{{ mail.Content|safe }}</p>
+<h3>Replies</h3>
+{% if mail.ChildMails.all %}
+<ol class="replies">
+	{% for cmail in mail.ChildMails.all %}
+	<li>
+		<dl>
+			<dt>{{ cmail }}</dt>
+			<dd>From: {{ cmail.From }}</dd>
+			<dd>{{ cmail.Datetime }}</dd>
+			<dd>{{ cmail.Content|safe }}</dd>
+		</dl>
+	</li>	
+	{% endfor %}
+</ol>
+{% else %}
+<p>No Replies here!</p>
+{% endif %}
