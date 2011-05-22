@@ -2,9 +2,12 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response,get_object_or_404
 
-import poplib
-import string
+import poplib,smtplib,string
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from models import Mail
+from forms import ReplyForm
 
 
 def fetch_mail(request):
@@ -21,6 +24,34 @@ def fetch_mail(request):
 		p.dele(i+1)
 	p.quit()
 	return HttpResponseRedirect('/admin/')
+
+def send_mail(tmail,form):
+	"""docstring for send_mail"""
+	msg=MIMEMultipart()
+	msg['From']="%s <airobot1@163.com>" % form.cleaned_data['Name']
+	msg['To']="airobot1@163.com" 
+	msg['Subject']=tmail.Subject
+	msg['In-Reply-To']=tmail.InReplyToRoot.MessageId
+	msg['Direct-In-Reply-To']=tmail.MessageId
+	msg.attach(MIMEText(form.cleaned_data['Content']))
+	
+	smtp=smtplib.SMTP()
+	smtp.connect("smtp.163.com")
+	smtp.login('airobot1','ragamuffin')
+	smtp.sendmail('airobot1@163.com','airobot1@163.com',msg.as_string())
+	smtp.quit()
+
+def reply(request,target_mail_id):
+	"""docstring for send_mail"""
+	tmail=get_object_or_404(Mail,id=target_mail_id)
+	if request.POST:
+		form=ReplyForm(request.POST)
+		if form.is_valid():
+			send_mail(tmail,form)
+			return HttpResponseRedirect('/')
+	else:
+		form=ReplyForm()
+	return render_to_response('reply.html',locals())
 
 def index(request):
 	"""docstring for index"""

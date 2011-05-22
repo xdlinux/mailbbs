@@ -5,7 +5,7 @@ from datetime import datetime
 def get_content(mail):
 	"""docstring for content"""
 	if mail.is_multipart():
-		return get_content(mail.get_payload()[1])
+		return get_content(mail.get_payload()[0])
 	else:
 		charset=mail.get_content_charset()
 		if charset==None:
@@ -52,7 +52,7 @@ class Mail(models.Model):
 		self.Subject=unicode(email.Header.decode_header(mail['Subject'])[0][0],codeset)
 		self.MessageId=mail['Message-Id']
 		self.Content=get_content(mail)
-		self.Datetime=datetime.strptime(mail['Date'][:-6],'%a, %d %b %Y %H:%M:%S')
+		self.Datetime=datetime.strptime(mail['Date'][:25],'%a, %d %b %Y %H:%M:%S')
 		self.LatestReplyDate=self.Datetime
 
 		if mail['In-Reply-To']:
