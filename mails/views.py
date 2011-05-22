@@ -19,4 +19,9 @@ def fetch_mail(request):
 		mail.save()
 	return HttpResponseRedirect('/admin/')
 
+def send_mail(request):
+	"""docstring for send_mail"""
+	if request.POST:
+
+
 		
