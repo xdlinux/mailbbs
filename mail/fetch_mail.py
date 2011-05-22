@@ -2,6 +2,8 @@
 # -*- coding:utf8 -*-
 import poplib
 import string
+from models import Mail
+
 
 def fetch_mail():
 	"""docstring for fetch_mail"""
@@ -10,6 +12,10 @@ def fetch_mail():
 	p.pass_('ragamuffin')
 	count,size=p.stat()
 	for i in range(count):
-		hr,msg,oct=p.retr(i)
-		mail=email.message_from_string(string.join(msg,'\n'))
+		hr,msg,oct=p.retr(i+1)
+		mail=Mail()
+		mail.RawData=string.join(msg,'\n')
+		mail.save()
+	return True
+
 		
