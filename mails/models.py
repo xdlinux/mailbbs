@@ -27,10 +27,15 @@ class Mail(models.Model):
 	InReplyToRoot = models.ForeignKey('self', related_name='ChildMails',null=True,blank=True)
 	RawData = models.TextField()
 	Datetime = models.DateTimeField()
+	LatestReplyDate = models.DateTimeField()
 	class Meta:
 		get_latest_by='Datetime'
 	def __unicode__(self):
 		return self.Subject
+	def update(self):
+		"""docstring for update"""
+		models.Model.save(self)
+
 	def save(self, force_insert=False, force_update=False):
 		mail=email.message_from_string(self.RawData)
 		codeset=email.Header.decode_header(mail['From'])[0][1]
@@ -48,6 +53,7 @@ class Mail(models.Model):
 		self.MessageId=mail['Message-Id']
 		self.Content=get_content(mail)
 		self.Datetime=datetime.strptime(mail['Date'][:-6],'%a, %d %b %Y %H:%M:%S')
+		self.LatestReplyDate=self.Datetime
 
 		if mail['In-Reply-To']:
 			try:
@@ -58,5 +64,7 @@ class Mail(models.Model):
 				cmail=self.InReplyTo
 				while cmail.InReplyTo:
 					cmail=cmail.InReplyTo
+				cmail.LatestReplyDate=self.Datetime
+				cmail.update()
 				self.InReplyToRoot=cmail
 		models.Model.save(self,force_insert,force_update)

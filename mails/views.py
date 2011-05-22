@@ -18,6 +18,8 @@ def fetch_mail(request):
 		mail=Mail()
 		mail.RawData=string.join(msg,'\n')
 		mail.save()
+		p.dele(i+1)
+	p.quit()
 	return HttpResponseRedirect('/admin/')
 
 def index(request):
